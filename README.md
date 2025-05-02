@@ -3,10 +3,12 @@
 ## Overview
 
 We extend the DINO-WM framework introduced by Zhou et al. (2024) by incorporating Optimal Transport (OT) regularization to guide the planning process.
+![image](intro.png)
 
 ## Method
 
 Our method builds upon DINO-WM, which leverages pre-trained DINOv2 visual features to create world models that can be used for zero-shot planning. Our approach constrains the world model's rollouts to follow shorter and more optimal trajectories by using interpolants in Wasserstein space as additional subtargets during planning.
+![image](model_arch.png)
 
 ## Optimal Transport
 The optimal transport problem (OT) seeks a co-registration between two probability distributions $\delta(x)$ and $\mu(x)$, $x \in R^d$, in the form of an invertible map $y = T(x)$ such that the externally provided cost $c(x, T(x))$ of moving point $x$ to $T(x)$ is minimized. This idea is captured mathematically by the orignal formulation from Monge:
@@ -89,7 +91,10 @@ We use the Cross-Entropy Method (CEM) for Model Predictive Control:
 
 We evaluate the OT-regularized planning method on the PushT environment. Our approach demonstrates slight improvements in performance compared to baseline methods from the original DINO-WM implementation. We can note that the addition of OT regularization helps the world model find more direct paths to the goal - rounding corners more tightly and traversing more quickly.
 
-*Figures coming soon*
+![image](output_normal/output2.gif)
+![image](output_ot_0.5/output2.gif)
+![image](output_ot_1/output2.gif)
+![image](output_ot_proprio/output2.gif)
 
 ## Limitations
 
