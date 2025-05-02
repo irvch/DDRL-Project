@@ -89,15 +89,17 @@ We use the Cross-Entropy Method (CEM) for Model Predictive Control:
 
 ## Results
 
-We evaluate the OT-regularized planning method on the PushT environment. Our approach demonstrates slight improvements in performance compared to baseline methods from the original DINO-WM implementation. We can note that the addition of OT regularization helps the world model find more direct paths to the goal - rounding corners more tightly and traversing more quickly.
+We evaluate the OT-regularized planning method on the PushT environment. Our approach demonstrates slight improvements in performance compared to baseline methods from the original DINO-WM implementation. We can note that the addition of OT regularization helps the world model find more direct paths to the goal - rounding corners more tightly and traversing more quickly. For each of the below animations, the top row displays the true observation from the PushT environment while the bottom row displays reconstructed from the latent state representations with a trained VQ-VAE decoder. 
 
-<img src="output_normal/output4.gif" width="400" height="400"> <img src="output_ot_proprio/output4.gif" width="400" height="400">
+The leftmost animation below uses the planning implementation from the original DINO-WM implementation. The middle animation uses the gradient-step-based interpolation method. The rightmost animation uses the second linear interpolation method.
+
+<img src="output_normal/output4.gif" width="400" height="400"> <img src="output_ot_proprio/output4.gif" width="400" height="400"> <img src="output_ot_1/output4.gif" width="400" height="400"> 
 
 ## Limitations
 
 There are considerable drawbacks to this implementation. Chief among them is the increased computational cost due to optimal transport calculations being made at every initial planning step. Moreover, unrealistic interpolants will inevitably occur due to latent representations' inherent lack of understanding physical priors. This is demonstrated in the failure case here: 
 
-<img src="output_normal/output1.gif" width="100" height="400"> <img src="output_ot_proprio/output1.gif" width="400" height="400">
+<img src="output_normal/output1.gif" width="400" height="400"> <img src="output_ot_proprio/output1.gif" width="400" height="400"> <img src="output_ot_1/output1.gif" width="400" height="400"> 
 
 The optimal mapping would simply have the object pass through the T-shape to reach its desired goal, yet doing so is physically impossible, and the model eventually fails to reach its target before a cutoff point established by the user. Sensitivity to OT-based regularization is controlled by the $\lambda$ parameter. If the parameter is too high, then we get failure cases like above, where the model should first take suboptimal actions to reach its goal. 
 
