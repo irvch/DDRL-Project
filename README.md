@@ -91,12 +91,12 @@ We use the Cross-Entropy Method (CEM) for Model Predictive Control:
 
 We evaluate the OT-regularized planning method on the PushT environment. Our approach demonstrates slight improvements in performance compared to baseline methods from the original DINO-WM implementation. We can note that the addition of OT regularization helps the world model find more direct paths to the goal - rounding corners more tightly and traversing more quickly.
 
-![image](output_normal/output4.gif)
-
-![image](output_ot_proprio/output4.gif)
+![image](output_normal/output4.gif) ![image](output_ot_proprio/output4.gif)
 
 ## Limitations
 
-There are considerable drawbacks to this implementation. Chief among them is the increased computational cost due to optimal transport calculations being made at every initial planning step. Moreover, unrealistic interpolants will inevitably occur due to latent representations' inherent lack of understanding physical priors. This is demonstrated in the failure case above: the optimal mapping would simply have the object pass through the T-shape to reach its desired goal, yet doing so is physically impossible, and the model eventually fails to reach its target before a cutoff point established by the user. Sensitivity to OT-based regularization is controlled by the $\lambda$ parameter. If the parameter is too high, then we get failure cases like above, where the model should first take suboptimal actions to reach its goal. 
+There are considerable drawbacks to this implementation. Chief among them is the increased computational cost due to optimal transport calculations being made at every initial planning step. Moreover, unrealistic interpolants will inevitably occur due to latent representations' inherent lack of understanding physical priors. This is demonstrated in the failure case here: 
+![image](output_normal/output1.gif) ![image](output_ot_proprio/output1.gif)
+The optimal mapping would simply have the object pass through the T-shape to reach its desired goal, yet doing so is physically impossible, and the model eventually fails to reach its target before a cutoff point established by the user. Sensitivity to OT-based regularization is controlled by the $\lambda$ parameter. If the parameter is too high, then we get failure cases like above, where the model should first take suboptimal actions to reach its goal. 
 
 Ultimately, the method seems mostly ineffective on the short-range tasks included in these experiments. Although there are performance gains in the cases where it is successful, these are marginal and offset by higher compute requirements.
