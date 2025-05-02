@@ -13,9 +13,9 @@ Our method builds upon DINO-WM, which leverages pre-trained DINOv2 visual featur
 ## Optimal Transport
 We first compute the Optimal Transport (OT) map $T: X \to Y $ that pushes source points $x \in X$ to the target points $y\in Y$ such that the externally provided cost $c(x, T(x))$ of moving point $x$ to $T(x)$ is minimized. This idea is captured mathematically by the orignal formulation from Monge:
 
-$$\min_T \left\{\left.\int _{X}c(x,T(x))\,\mathrm{d} \mu(x)\;\right|\;T_x(\mu )=\delta \right\}$$
+$$\min_T \left \{ \left . \int_{X} c(x,T(x)) \, \mathrm{d} \mu(x) \; \right | \; T_x \mu = \delta \right\}$$
 
-Here $T_x(\mu) = \delta$ denotes a measure-preserving pushforward.
+Here $T_x \mu = \delta$ denotes a measure-preserving pushforward.
 
 We seek one-to-one correspondences, meaning entropy-regularized approximations like Sinkhorn's algorithm are undesired. Instead, we use another method derived from Monge's formulation that allows us to capture interpolants in Wasserstein space.
 
@@ -27,14 +27,19 @@ $$c(x,T(x)) = \frac{1}{2n} \sum_{i=1}^n ||x_i - T(x_i)||^2_2$$
 where $n$ is the number of observations and $d$ is the number of dimensions.
 
 To enforce the push-forward condition, we regulate transport with the Kullback-Liebler divergence - measuring relative entropy between the source distribution and the target distribution:
+
 $$D_{KL}(\delta||\mu) = \int_{\mathbb{R}^n} \mu(x) \ln\frac{\delta(x)}{\mu(x)} dx \approx \sum_{i=1}^n \ln\frac{\delta(x_i)}{\mu(x_i)}$$
 
 We employ kernel density estimation to acquire our probability density functions:
+
 $$\delta(x_i)=\frac{1}{n}\sum_{j=1}^n K(T(x_i),T(x_j),H_x)$$
+
 $$\mu(x_i)=\frac{1}{m}\sum_{k=1}^m K(T(x_i),y_k,H_y)$$
 
 Here we use the multivariate Gaussian kernel:
+
 $$K(x,\mu,\Sigma)=\frac{1}{\sqrt{(2\pi)^d \det(\Sigma)}} e^{-\frac{1}{2}(x-\mu) \Sigma^{-1} (x-\mu)^T }$$
+
 where $\Sigma$ represents the diagonal covariance matrix, and $\mu$ denotes the center point of the kernel.
 
 ### Interpolation in Wasserstein Space
@@ -49,6 +54,7 @@ For patch-based features:
 The OT interpolant provides a direct path between the initial and goal states in the latent space, guiding the world model's predictions to follow more optimal trajectories.
 
 We enhance the planning objective with an additional OT regularization term:
+
 $$\text{Cost} = \|\hat{z}_T - z_g\|^2 + \lambda\|z_t^{OT} - \hat{z}_t\|^2$$
 
 Where:
@@ -77,4 +83,6 @@ We evaluate the OT-regularized planning method on the PushT environment. Our app
 
 ## Limitations
 
-There are considerable drawbacks to this implementation. Chief among them is the increased computational cost due to optimal transport calculations being made at every initial planning step. Moreover, unrealistic interpolants will inevitably occur due to latent representations' inherent lack of understanding physical priors. This is demonstrated in the failure case above: the optimal mapping would simply have the object pass through the T-shape to reach its desired goal, yet doing so is physically impossible, and the model eventually fails to reach its target before a cutoff point established by the user. Sensitivity to OT-based regularization is controlled by the $\lambda$ parameter. If the parameter is too high, then we get failure cases like above, where the model should first take suboptimal actions to reach its goal. Coupled with only marginal gains in the cases where it is successful, the method overall seems mostly ineffective on the short-range tasks included in these experiments.
+There are considerable drawbacks to this implementation. Chief among them is the increased computational cost due to optimal transport calculations being made at every initial planning step. Moreover, unrealistic interpolants will inevitably occur due to latent representations' inherent lack of understanding physical priors. This is demonstrated in the failure case above: the optimal mapping would simply have the object pass through the T-shape to reach its desired goal, yet doing so is physically impossible, and the model eventually fails to reach its target before a cutoff point established by the user. Sensitivity to OT-based regularization is controlled by the $\lambda$ parameter. If the parameter is too high, then we get failure cases like above, where the model should first take suboptimal actions to reach its goal. 
+
+Ultimately, the method seems mostly ineffective on the short-range tasks included in these experiments. Although there are performance gains in the cases where it is successful, these are marginal and offset by higher compute requirements.
