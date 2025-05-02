@@ -11,7 +11,7 @@ We extend the DINO-WM framework introduced by Zhou et al. (2024) by incorporatin
 Our method builds upon DINO-WM, which leverages pre-trained DINOv2 visual features to create world models that can be used for zero-shot planning. Our approach constrains the world model's rollouts to follow shorter and more optimal trajectories by using interpolants in Wasserstein space as additional subtargets during planning.
 
 ## Optimal Transport
-We first compute the Optimal Transport (OT) map $T: X \to Y $ that pushes source points $x \in X$ to the target points $y\in Y$ such that the externally provided cost $c(x, T(x))$ of moving point $x$ to $T(x)$ is minimized. This idea is captured mathematically by the orignal formulation from Monge:
+We first compute the Optimal Transport (OT) map $T: X \rightarrow Y $ that pushes source points $x \in X$ to the target points $y\in Y$ such that the externally provided cost $c(x, T(x))$ of moving point $x$ to $T(x)$ is minimized. This idea is captured mathematically by the orignal formulation from Monge:
 
 $$\min_T \left[ \int_{X} c(x,T(x)) \mathrm{d} \mu(x) |  T_x \mu = \delta \right]$$
 
