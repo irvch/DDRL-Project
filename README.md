@@ -12,19 +12,18 @@ Our method builds upon DINO-WM, which leverages pre-trained DINOv2 visual featur
 
 ## Optimal Transport
 We first compute the Optimal Transport (OT) map $T: X \to Y $ that pushes source points $x \in X$ to the target points $y\in Y$ such that the externally provided cost $c(x, T(x))$ of moving point $x$ to $T(x)$ is minimized. This idea is captured mathematically by
-$
-\min_T \left\{\left.\int _{X}c(x,T(x))\,\mathrm{d} \mu(x)\;\right|\;T_{\#}(\mu )=\delta \right\}
-$
+$\min_T \left\{\left.\int _{X}c(x,T(x))\,\mathrm{d} \mu(x)\;\right|\;T_{\#}(\mu )=\delta \right\}$
 
 Here $T_{\#}(\mu) = \delta$ denotes a measure-preserving pushforward.
 
 This project uses the Euclidean distance, a canonical choice of cost in normed spaces:
-$ 
-c(x,T(x)) = \frac{1}{2n} \sum_{i=1}^n ||x_i - T(x_i)||^2_2
-$
+$c(x,T(x)) = \frac{1}{2n} \sum_{i=1}^n ||x_i - T(x_i)||^2_2$
 where $n$ is the number of observations and $d$ is the number of dimensions.
 
 Test Function
+TO enforce the push-forward condition, we regulate transport with the Kullback-Liebler divergence - measuring relative entropy between the source distribution and the target distribution.
+$D_{KL}(\delta||\mu) = \int_{\mathbb{R}^n} \mu(x) \ln\frac{\delta(x)}{\mu(x)} dx \approx \sum_{i=1}^n \ln\frac{\delta(x_i)}{\mu(x_i)}$
+
 We employ kernel density estimation to acquire our probability density functions
 \begin{equation}
     \delta(x_i)=\frac{1}{n}\sum_{j=1}^n K(T(x_i),T(x_j),H_x)
@@ -39,16 +38,8 @@ Here we use the multivariate Gaussian kernel:
 \end{equation}
 where $\Sigma$ represents the diagonal covariance matrix, and $\mu$ denotes the center point of the kernel.
 
-We regulate transport with the Kullback-Liebler Divergence - a measure of relative entropy quantifying the difference between one probability distribution from a reference probability distribution. In our case, we aim penalize differences between the distributions of the source and target points.
-
-$
-D_{KL}(\delta||\mu) = \int_{\mathbb{R}^n} \mu(x) \ln\frac{\delta(x)}{\mu(x)} dx \approx \sum_{i=1}^n \ln\frac{\delta(x_i)}{\mu(x_i)}
-$
-
 To find the optimal transport map, we seek to minimize the global cost function 
-$
-L(x, y) = c(x,T(x)) - \lambda \left[ D_{KL}(\delta||\mu) \right]
-$
+$L(x, y) = c(x,T(x)) - \lambda \left[ D_{KL}(\delta||\mu) \right]$
 
 
 ### Interpolation in Wasserstein Space
@@ -63,9 +54,7 @@ The OT interpolant provides a direct path between the initial and goal states in
 
 We do this by enhance the planning objective with an additional OT regularization term:
 
-$
-\text{Cost} = \|\hat{z}_T - z_g\|^2 + \lambda\|z_t^{OT} - \hat{z}_t\|^2
-$
+$\text{Cost} = \|\hat{z}_T - z_g\|^2 + \lambda\|z_t^{OT} - \hat{z}_t\|^2$
 
 Where:
 - $\hat{z}_T$ is the predicted latent state at the final timestep T
