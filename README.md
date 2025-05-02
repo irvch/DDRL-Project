@@ -1,7 +1,5 @@
 # Regulating DINO-WM with Optimal Transport
 
-This repository contains the implementation of our research on enhancing DINO-WM (World Models on Pre-trained Visual Features) with Optimal Transport regularization for improved zero-shot planning in robotics.
-
 ## Overview
 
 We extend the DINO-WM framework introduced by Zhou et al. (2024) by incorporating Optimal Transport (OT) regularization to guide the planning process.
@@ -43,9 +41,20 @@ $$K(x,\mu,\Sigma)=\frac{1}{\sqrt{(2\pi)^d \det(\Sigma)}} e^{-\frac{1}{2}(x-\mu) 
 where $\Sigma$ represents the diagonal covariance matrix, and $\mu$ denotes the center point of the kernel.
 
 ### Interpolation in Wasserstein Space
+We use gradient descent to optimize the transport map. The process works as follows:
+- Initialize the transport map $T(x)$ as the identity map or a simple linear mapping from source to target
+- Compute the total cost function $L(x,y)$ by combining the transport cost and KL-divergence
+- Calculate the gradient of the cost function with respect to the transport map parameters:
 
-We generate intermediate waypoints between the source and target states:
-Let $T(x)=z^{OT}$
+$$ \nabla_T L(x,y) = \nabla_T c(x,T(x)) − \lambda \nabla_T [D_{KL}(\mu || \delta) ] $$
+
+Update the transport map using gradient descent:
+
+$$ T^{(t+1)} = T^{(t)}−\eta \nabla_T L(x,y) $$
+
+where $\eta$ is the learning rate
+
+This way, we generate intermediate waypoints between the source and target states. Let $T^{(t)} = z_t^{OT}$
 For patch-based features:
 - We calculate the transport-guided target for each patch using the OT plan: $z_{mapped} = P \cdot z_{target}$
 - For each timestep $t$, we interpolate: $\text{waypoint}[t] = (1-\alpha) \cdot z_{source} + \alpha \cdot z_{mapped}$
