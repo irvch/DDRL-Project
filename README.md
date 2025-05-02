@@ -54,10 +54,11 @@ $$ T^{(t+1)} = T^{(t)}−\eta \nabla_T L(x,y) $$
 
 where $\eta$ is the learning rate
 
-This way, we generate intermediate waypoints between the source and target states. Let $T^{(t)} = z_t^{OT}$
-For patch-based features:
-- We calculate the transport-guided target for each patch using the OT plan: $z_{mapped} = P \cdot z_{target}$
-- For each timestep $t$, we interpolate: $\text{waypoint}[t] = (1-\alpha) \cdot z_{source} + \alpha \cdot z_{mapped}$
+For patch-based features, we generate intermediate waypoints between the source and target states for each patch by letting $T^{(t)} = z_t^{OT}$. 
+
+We also use another interpolation method to see which method works best. 
+- We calculate the transport-guided target for each patch using the OT plan: $z_{mapped} = T_final$
+- For each timestep $t$, we interpolate: $z_t^{OT} = (1-\alpha) \cdot z_{source} + \alpha \cdot z_{mapped}$
 - where $\alpha = t/(n\_{steps}+1)$ controls the interpolation ratio
 
 The OT interpolant provides a direct path between the initial and goal states in the latent space, guiding the world model's predictions to follow more optimal trajectories.
