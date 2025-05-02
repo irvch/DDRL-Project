@@ -91,9 +91,7 @@ We use the Cross-Entropy Method (CEM) for Model Predictive Control:
 
 We evaluate the OT-regularized planning method on the PushT environment. Our approach demonstrates slight improvements in performance compared to baseline methods from the original DINO-WM implementation. We can note that the addition of OT regularization helps the world model find more direct paths to the goal - rounding corners more tightly and traversing more quickly.
 
-![image](output_normal/output2.gif)
-![image](output_ot_0.5/output2.gif)
-![image](output_ot_1/output2.gif)
+![image](output_normal/output4.gif)
 ![image](output_ot_proprio/output2.gif)
 
 ## Limitations
