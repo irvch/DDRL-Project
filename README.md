@@ -11,13 +11,13 @@ We extend the DINO-WM framework introduced by Zhou et al. (2024) by incorporatin
 Our method builds upon DINO-WM, which leverages pre-trained DINOv2 visual features to create world models that can be used for zero-shot planning. Our approach constrains the world model's rollouts to follow shorter and more optimal trajectories by using interpolants in Wasserstein space as additional subtargets during planning.
 
 ## Optimal Transport
-We first compute the Optimal Transport (OT) map $T: X \rightarrow Y $ that pushes source points $x \in X$ to the target points $y\in Y$ such that the externally provided cost $c(x, T(x))$ of moving point $x$ to $T(x)$ is minimized. This idea is captured mathematically by the orignal formulation from Monge:
+The optimal transport problem (OT) seeks a co-registration between two probability distributions $\delta(x)$ and $\mu(x)$, $x \in R^d$, in the form of an invertible map $y = T(x)$ such that the externally provided cost $c(x, T(x))$ of moving point $x$ to $T(x)$ is minimized. This idea is captured mathematically by the orignal formulation from Monge:
 
-$$\min_T \left[ \int_{X} c(x,T(x)) \mathrm{d} \mu(x) |  T_x \mu = \delta \right]$$
+$$\min_T \left[ \int_{X} c(x,T(x)) \mathrm{d} \mu(x) |  T_x \delta = \mu \right]$$
 
-Here $T_x \mu = \delta$ denotes a measure-preserving pushforward.
+Here $T_x \delta = \mu$ denotes a measure-preserving pushforward, which guarantees all mass is preserved.
 
-We seek one-to-one correspondences, meaning entropy-regularized approximations like Sinkhorn's algorithm are undesired. Instead, we use another method derived from Monge's formulation that allows us to capture interpolants in Wasserstein space.
+We seek one-to-one correspondences, meaning entropy-regularized approximations like Sinkhorn's algorithm are undesired. Instead, we derive another method from Monge's formulation that allows us to capture interpolants in Wasserstein space.
 
 we seek to minimize the global cost function:
 $$L(x, y) = c(x,T(x)) - \lambda \left[ D_{KL}(\delta||\mu) \right]$$
