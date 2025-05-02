@@ -13,7 +13,7 @@ Our method builds upon DINO-WM, which leverages pre-trained DINOv2 visual featur
 ## Optimal Transport
 We first compute the Optimal Transport (OT) map $T: X \to Y $ that pushes source points $x \in X$ to the target points $y\in Y$ such that the externally provided cost $c(x, T(x))$ of moving point $x$ to $T(x)$ is minimized. This idea is captured mathematically by the orignal formulation from Monge:
 
-$$\min_T \left \{ \left . \int_{X} c(x,T(x)) \, \mathrm{d} \mu(x) \; \right | \; T_x \mu = \delta \right\}$$
+$$\min_T \left\{ \int_{X} c(x,T(x)) \, \mathrm{d} \mu(x) \; | \; T_x \mu = \delta \right\}$$
 
 Here $T_x \mu = \delta$ denotes a measure-preserving pushforward.
 
