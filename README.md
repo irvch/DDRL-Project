@@ -94,13 +94,13 @@ We evaluate the OT-regularized planning method on the PushT environment. Our app
 
 The leftmost animation below uses the planning implementation from the original DINO-WM implementation. The second and third animations uses the gradient-step-based interpolation method and yield (almost imperceptibly) different trajectories as a result of using different regularization parameters $\lambda$. The second sets $\lambda = 0.5$, which leads to a trajectory that is slightly closer to the original. Meanwhile the third has higher regularization value $\lambda = 1$. The rightmost animation uses the linear interpolation method and performs worse, barely moving at times. We hypothesize that this is due to more dyanmic interpolations resulting from the gradient-step-based method as opposed to simple linear couplings.
 
-<img src="output_normal/output4.gif" width="225" height="225"> <img src="output_ot_0.5/output4.gif" width="225" height="225"> <img src="output_ot_proprio/output4.gif" width="225" height="225"> <img src="output_ot_1/output4.gif" width="225" height="225"> 
+<img src="output_normal/output4.gif" width="200" height="200"> <img src="output_ot_0.5/output4.gif" width="200" height="200"> <img src="output_ot_proprio/output4.gif" width="200" height="200"> <img src="output_ot_1/output4.gif" width="200" height="200"> 
 
 ## Limitations
 
 There are considerable drawbacks to this implementation. Chief among them is the increased computational cost due to optimal transport calculations being made at every initial planning step. Moreover, unrealistic interpolants will inevitably occur due to latent representations' inherent lack of understanding physical priors. This is demonstrated in the failure case here: 
 
-<img src="output_normal/output1.gif" width="225" height="225"> <img src="output_ot_0.5/output1.gif" width="225" height="225"> <img src="output_ot_proprio/output1.gif" width="225" height="225"> <img src="output_ot_1/output1.gif" width="225" height="225">
+<img src="output_normal/output1.gif" width="200" height="200"> <img src="output_ot_0.5/output1.gif" width="200" height="200"> <img src="output_ot_proprio/output1.gif" width="200" height="200"> <img src="output_ot_1/output1.gif" width="200" height="200">
 
 The optimal mapping incentivizes the object to phase through the T-shape to reach its desired goal, yet doing so is physically impossible, and the model eventually fails to reach its target before a cutoff point established by the user (30 planning steps). Sensitivity to OT-based regularization is controlled by the $\lambda$ parameter. If the parameter is too high, then we get failure cases like above, where the model should first take suboptimal actions to reach its goal. The various additional parameters used in this method are generally quite sensitive and require careful tuning to perform well.
 
