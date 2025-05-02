@@ -37,7 +37,9 @@ We use the Cross-Entropy Method (CEM) for Model Predictive Control:
 
 ## Results
 
-Our OT-regularized approach shows improved planning performance compared to baseline methods, with significantly lower Chamfer distances in challenging manipulation tasks. The addition of OT regularization helps the world model find more direct paths to the goal while maintaining physical plausibility.
+Our OT-regularized approach demonstrates only marginal improvements in planning performance compared to baseline methods from the original DINO-WM implementation. The addition of OT regularization helps the world model find more direct paths to the goal while maintaining physical plausibility in most cases.
+
+*Figures coming soon*
 
 ## Limitations
 
